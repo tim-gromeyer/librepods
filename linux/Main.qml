@@ -274,6 +274,15 @@ ApplicationWindow {
                         onClicked: keysQrDialog.show()
                     }
 
+                    TextField {
+                        id: macAddressField
+                        placeholderText: "XX:XX:XX:XX:XX:XX"
+                        text: settings.macAddress
+                        onEditingFinished: {
+                            settings.macAddress = text
+                        }
+                    }
+
                     KeysQRDialog {
                         id: keysQrDialog
                         encKey: airPodsTrayApp.deviceInfo.magicAccEncKey

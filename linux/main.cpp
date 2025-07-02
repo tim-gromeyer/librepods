@@ -25,6 +25,7 @@
 #include "ble/bleutils.h"
 #include "QRCodeImageProvider.hpp"
 #include "systemsleepmonitor.hpp"
+#include "Settings.h"
 
 using namespace AirpodsTrayApp::Enums;
 
@@ -656,12 +657,7 @@ private slots:
             LOG_INFO("Already connected to the phone");
             return;
         }
-        QBluetoothAddress phoneAddress("00:00:00:00:00:00"); // Default address, will be overwritten if PHONE_MAC_ADDRESS is set
-        QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-        if (!env.value("PHONE_MAC_ADDRESS").isEmpty())
-        {
-            phoneAddress = QBluetoothAddress(env.value("PHONE_MAC_ADDRESS"));
-        }
+        QBluetoothAddress phoneAddress(m_settings->value("macAddress").toString());
         phoneSocket = new QBluetoothSocket(QBluetoothServiceInfo::L2capProtocol);
         connect(phoneSocket, &QBluetoothSocket::connected, this, [this]() {
             LOG_INFO("Connected to phone");
@@ -916,7 +912,9 @@ int main(int argc, char *argv[]) {
     qmlRegisterType<Battery>("me.kavishdevar.Battery", 1, 0, "Battery");
     qmlRegisterType<DeviceInfo>("me.kavishdevar.DeviceInfo", 1, 0, "DeviceInfo");
     AirPodsTrayApp *trayApp = new AirPodsTrayApp(debugMode, hideOnStart, &engine);
+    Settings *settings = new Settings(trayApp);
     engine.rootContext()->setContextProperty("airPodsTrayApp", trayApp);
+    engine.rootContext()->setContextProperty("settings", settings);
     engine.addImageProvider("qrcode", new QRCodeImageProvider());
     trayApp->loadMainModule();
 

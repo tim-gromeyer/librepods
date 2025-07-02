@@ -35,6 +35,8 @@ qt_add_executable(librepods
     media/playerstatuswatcher.cpp
     media/playerstatuswatcher.h
     systemsleepmonitor.hpp
+    Settings.h
+    Settings.cpp
 )
 
 qt_add_qml_module(librepods
@@ -47,6 +49,7 @@ qt_add_qml_module(librepods
         PodColumn.qml
         Icon.qml
         KeysQRDialog.qml
+        Settings.qml
 )
 
 # Add the resource file
